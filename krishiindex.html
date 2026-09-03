@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KrishiMitra - Find Farm Machinery</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{colors:{primary:'#2E7D32',secondary:'#81C784',accent:'#FFC107'},fontFamily:{poppins:['Poppins']}}}}</script>
+<style>body{font-family:'Inter',sans-serif}.poppins{font-family:'Poppins',sans-serif}.glass{backdrop-filter:blur(12px)} #h-locDrop,#f-locDrop{max-height:200px; overflow-y:auto;} #h-locDrop::-webkit-scrollbar{width:6px} #h-locDrop::-webkit-scrollbar-thumb{background:#2E7D32; border-radius:10px}</style><head>
+<body class="bg-[#F8F9F3]">
+<!-- NAV -->
+<nav class="sticky top-0 z-50 bg-white/90 glass border-b shadow-sm">
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+<div class="flex items-center gap-2 cursor-pointer" onclick="navigate('home')"><div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center text-white"><i class="fa-solid fa-seedling"></i></div><span class="poppins font-bold text-xl text-primary">KrishiMitra</span></div>
+<div class="hidden lg:flex gap-6 text-sm font-medium"><a onclick="navigate('home')" class="navlink cursor-pointer">Home</a><a onclick="navigate('find')" class="navlink cursor-pointer">Find Machinery</a><a onclick="navigate('rent')" class="navlink cursor-pointer">Rent Out Machinery</a><a onclick="navigate('how')" class="navlink cursor-pointer">How It Works</a><a onclick="navigate('about')" class="navlink cursor-pointer">About Us</a><a onclick="navigate('reviews')" class="navlink cursor-pointer">Reviews</a><a onclick="navigate('contact')" class="navlink cursor-pointer">Contact</a></div>
+<div class="flex items-center gap-3"><button id="dashBtn" onclick="openDashboard()" class="hidden px-4 py-2 bg-gray-100 rounded-full text-sm"><i class="fa-regular fa-user mr-1"></i> Dashboard</button><button onclick="navigate('login')" id="loginBtn" class="px-4 py-2 text-sm font-medium">Login</button><button onclick="navigate('find')" class="hidden md:block px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold">Get Started</button><button class="lg:hidden" onclick="toggleMobile()"><i class="fa-solid fa-bars text-xl"></i></button></div>
+</div>
+<div id="mobileMenu" class="hidden lg:hidden border-t bg-white p-4 space-y-3"><a onclick="navigate('home');toggleMobile()" class="block">Home</a><a onclick="navigate('find');toggleMobile()" class="block">Find Machinery</a><a onclick="navigate('rent');toggleMobile()" class="block">Rent Out Machinery</a><a onclick="navigate('how');toggleMobile()" class="block">How It Works</a><a onclick="navigate('about');toggleMobile()" class="block">About Us</a><a onclick="navigate('reviews');toggleMobile()" class="block">Reviews</a><a onclick="navigate('contact');toggleMobile()" class="block">Contact</a></div>
+</nav>
+
+<!-- PAGES CONTAINER -->
+<div id="app"></div>
+
+<script>
+// ---------- DATA & STORAGE ----------
+const demoMachines = [
+{id:'m1',name:'Mahindra 575 DI Tractor',type:'Tractor',owner:'Ramesh Patil',phone:'9876543210',location:'Nagpur, MH',distance:2.5,priceHour:900,priceDay:6500,rating:4.8,availability:true,image:'https://images.unsplash.com/photo-1592985684811-6c0f98adb014?w=600',desc:'Powerful 45HP tractor suitable for all farming operations.',work:['ploughing','tilling','hauling']},
+{id:'m2',name:'John Deere 5039D',type:'Tractor',owner:'Sunil Yadav',phone:'9876543211',location:'Wardha, MH',distance:12,priceHour:1100,priceDay:8000,rating:4.9,availability:true,image:'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600',desc:'40HP tractor with excellent fuel efficiency.',work:['ploughing','sowing']},
+{id:'m3',name:'Rotavator 7 Feet',type:'Rotavator',owner:'Anil Deshmukh',phone:'9876543212',location:'Nagpur, MH',distance:3.2,priceHour:700,priceDay:5000,rating:4.6,availability:true,image:'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600',desc:'Heavy duty rotavator for seedbed preparation.',work:['tilling','seedbed']},
+{id:'m4',name:'Combine Harvester',type:'Harvester',owner:'Vikram Singh',phone:'9876543213',location:'Amravati, MH',distance:25,priceHour:2500,priceDay:18000,rating:4.7,availability:false,image:'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600',desc:'High capacity combine for wheat and rice harvesting.',work:['harvesting']},
+{id:'m5',name:'Seed Drill Machine',type:'Seed Drill',owner:'Prakash More',phone:'9876543214',location:'Nagpur, MH',distance:1.8,priceHour:800,priceDay:5500,rating:4.8,availability:true,image:'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',desc:'Precise seed placement for better yield.',work:['sowing','seeding']},
+{id:'m6',name:'Cultivator 9 Tyne',type:'Cultivator',owner:'Suresh Kulkarni',phone:'9876543215',location:'Yavatmal, MH',distance:18,priceHour:600,priceDay:4000,rating:4.5,availability:true,image:'https://images.unsplash.com/photo-1500930540495-e92875696a16?w=600',desc:'For secondary tillage operations.',work:['tilling','cultivation']}
+];
+function getMachines(){let d=localStorage.getItem('km_machines'); if(!d){localStorage.setItem('km_machines',JSON.stringify(demoMachines)); return demoMachines;} return JSON.parse(d);}
+function saveMachines(m){localStorage.setItem('km_machines',JSON.stringify(m));}
+function getBookings(){return JSON.parse(localStorage.getItem('km_bookings')||'[]');}
+function saveBookings(b){localStorage.setItem('km_bookings',JSON.stringify(b));}
+function getUser(){return JSON.parse(localStorage.getItem('km_user')||'null');}
+function getFavs(){return JSON.parse(localStorage.getItem('km_fav')||'[]');}
+
+// ---------- AI MATCH ----------
+function aiScore(machine, filters){
+ let locScore = Math.max(0,100 - machine.distance*3);
+ let workScore = 50; if(filters.work){ workScore = machine.work.some(w=>filters.work.toLowerCase().includes(w))?98:40; } else workScore=85;
+ let priceScore = 100; if(filters.budget){ let perDay = parseInt(filters.budget)||7000; priceScore = machine.priceDay <= perDay? 95 : Math.max(20, 100 - (machine.priceDay-perDay)/50); }
+ let availScore = machine.availability?95:30;
+ let total = Math.round(0.4*locScore + 0.3*workScore + 0.2*priceScore + 0.1*availScore);
+ return {total, locScore:Math.round(locScore), workScore, priceScore:Math.round(priceScore), availScore};
+}
+
+// ---------- NAVIGATION ----------
+let currentPage='home';
+let findFilters={};
+function navigate(p){currentPage=p; render(); window.scrollTo(0,0);}
+function toggleMobile(){document.getElementById('mobileMenu').classList.toggle('hidden');}
+function openDashboard(){let u=getUser(); if(!u){navigate('login');return;} if(u.role==='owner') navigate('ownerDash'); else navigate('farmerDash');}
+function checkAuth(){
+ let u=getUser();
+ let lb=document.getElementById('loginBtn'); let db=document.getElementById('dashBtn');
+ if(u){lb.innerText=u.name.split(' ')[0]; db.classList.remove('hidden');} else {lb.innerText='Login'; db.classList.add('hidden');}
+}
+
+// ---------- RENDER ----------
+function render(){
+ checkAuth();
+ let app=document.getElementById('app');
+ if(currentPage==='home') app.innerHTML=homePage();
+ else if(currentPage==='find') app.innerHTML=findPage();
+ else if(currentPage==='rent') app.innerHTML=rentPage();
+ else if(currentPage==='how') app.innerHTML=howPage();
+ else if(currentPage==='about') app.innerHTML=aboutPage();
+ else if(currentPage==='reviews') app.innerHTML=reviewsPage();
+ else if(currentPage==='contact') app.innerHTML=contactPage();
+ else if(currentPage==='login') app.innerHTML=loginPage();
+ else if(currentPage==='ownerDash') app.innerHTML=ownerDashPage();
+ else if(currentPage==='farmerDash') app.innerHTML=farmerDashPage();
+ else if(currentPage.startsWith('detail-')){let id=currentPage.split('-')[1]; app.innerHTML=detailPage(id);}
+ attachEvents();
+}
+
+function homePage(){return `
+<div class="bg-gradient-to-b from-[#E8F5E9] to-[#F8F9F3]">
+<div class="max-w-7xl mx-auto px-4 py-16 lg:py-24 grid lg:grid-cols-2 gap-10 items-center">
+<div><span class="inline-block px-3 py-1 bg-white rounded-full text-xs font-semibold text-primary border">🌾 Trusted by 500+ Farmers</span>
+<h1 class="poppins text-4xl lg:text-5xl font-bold leading-tight mt-4 text-gray-900">Find the Right Farm Machinery, <span class="text-primary">Right When You Need It.</span></h1>
+<p class="mt-4 text-gray-600">KrishiMitra connects farmers with nearby agricultural machinery owners for easy, affordable and reliable rentals.</p>
+<div class="mt-6 flex gap-3"><button onclick="navigate('find')" class="px-6 py-3 bg-primary text-white rounded-full font-semibold">👨‍🌾 I Need a Machine</button><button onclick="navigate('rent')" class="px-6 py-3 bg-white border rounded-full font-semibold">🚜 Rent Out My Machine</button></div>
+<div class="mt-8 grid grid-cols-3 gap-4"><div class="bg-white p-4 rounded-xl shadow-sm"><div class="text-2xl font-bold">500+</div><div class="text-xs text-gray-500">Farmers Connected</div></div><div class="bg-white p-4 rounded-xl shadow-sm"><div class="text-2xl font-bold">100+</div><div class="text-xs text-gray-500">Machines Listed</div></div><div class="bg-white p-4 rounded-xl shadow-sm"><div class="text-2xl font-bold">4.8/5</div><div class="text-xs text-gray-500">Average Rating</div></div></div>
+</div>
+<div class="relative"><img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=700" class="rounded-[24px] shadow-2xl"><div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg flex gap-3 items-center"><div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">🚜</div><div><div class="font-bold text-sm">Mahindra Tractor Booked</div><div class="text-xs text-gray-500">2.5km away • 92% Match</div></div></div></div>
+</div>
+</div>
+
+<!-- Search -->
+<div class="max-w-7xl mx-auto px-4 -mt-8"><div class="bg-white rounded-2xl shadow-lg p-6 grid md:grid-cols-4 gap-4"><div class="relative">
+  <input id="h-location" onfocus="showLoc('h')" oninput="filterLoc(this.value,'h')" placeholder="📍 Location (e.g. Nagpur)" class="border p-3 rounded-xl w-full">
+  <div id="h-locDrop" class="hidden absolute z-50 mt-1 w-full bg-white border rounded-xl shadow-lg max-h-52 overflow-y-auto"></div>
+</div><select id="h-machine" class="border p-3 rounded-xl"><option value="">Select Machine</option><option>Tractor</option><option>Harvester</option><option>Rotavator</option><option>Seed Drill</option><option>Cultivator</option></select><input id="h-date" type="date" class="border p-3 rounded-xl"><button onclick="homeSearch()" class="bg-primary text-white rounded-xl font-semibold">Find Machinery</button></div></div>
+
+<!-- Categories -->
+<div class="max-w-7xl mx-auto px-4 py-16"><h2 class="poppins text-2xl font-bold">Popular Machinery Categories</h2><div class="mt-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+${[{i:'🚜',n:'Tractors'},{i:'🌾',n:'Harvesters'},{i:'🌱',n:'Seed Drills'},{i:'🔄',n:'Rotavators'},{i:'🌾',n:'Cultivators'},{i:'💧',n:'Irrigation'},{i:'⚙️',n:'Others'}].map(c=>`<div onclick="catSearch('${c.n}')" class="bg-white p-5 rounded-2xl border hover:shadow-md cursor-pointer text-center"><div class="text-3xl">${c.i}</div><div class="mt-2 font-semibold text-sm">${c.n}</div></div>`).join('')}
+</div></div>
+
+<!-- How works -->
+<div class="bg-white py-16"><div class="max-w-7xl mx-auto px-4"><h2 class="poppins text-2xl font-bold text-center">How KrishiMitra Works</h2><div class="mt-10 grid md:grid-cols-4 gap-6">${[{s:'1',t:'Search',d:'Tell us what machinery you need.'},{s:'2',t:'Get Matched',d:'AI recommends suitable nearby machinery.'},{s:'3',t:'Book',d:'Choose machine and send booking request.'},{s:'4',t:'Farm',d:'Use machinery and complete work.'}].map(x=>`<div class="text-center"><div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto font-bold">${x.s}</div><div class="mt-3 font-bold">${x.t}</div><div class="mt-1 text-sm text-gray-500">${x.d}</div></div>`).join('')}</div></div></div>
+
+<!-- Reviews preview -->
+<div class="max-w-7xl mx-auto px-4 py-16"><div class="flex justify-between items-center"><h2 class="poppins text-2xl font-bold">What Farmers Say</h2><button onclick="navigate('reviews')" class="text-primary font-semibold">View All →</button></div><div class="mt-6 grid md:grid-cols-3 gap-6">${[1,2,3].map(i=>`<div class="bg-white p-6 rounded-2xl border"><div class="text-yellow-400">⭐⭐⭐⭐⭐</div><p class="mt-3 text-sm">"I found a tractor near my farm within minutes. The matching feature made it very easy."</p><div class="mt-3 font-semibold text-sm">— Demo Farmer ${i}</div></div>`).join('')}</div></div>
+
+<div class="bg-primary text-white py-12 text-center"><h2 class="poppins text-3xl font-bold">Ready to Get Started?</h2><p class="mt-2 opacity-80">Join 500+ farmers already using KrishiMitra</p><div class="mt-6 flex justify-center gap-3"><button onclick="navigate('find')" class="px-6 py-3 bg-white text-primary rounded-full font-bold">Find Machinery</button><button onclick="navigate('rent')" class="px-6 py-3 bg-[#1B5E20] rounded-full font-bold">List Your Machine</button></div></div>
+<footer class="bg-[#1B5E20] text-white py-12"><div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8"><div><div class="font-bold text-lg">KrishiMitra</div><p class="mt-2 text-sm opacity-70">Connecting farmers with the machinery they need.</p></div><div><div class="font-bold">Quick Links</div><div class="mt-3 space-y-1 text-sm opacity-70"><div>Home</div><div>Find Machinery</div><div>Rent Out Machinery</div><div>How It Works</div></div></div><div><div class="font-bold">Support</div><div class="mt-3 space-y-1 text-sm opacity-70"><div>Help Center</div><div>FAQs</div><div>Terms</div><div>Privacy Policy</div></div></div><div><div class="font-bold">Contact</div><div class="mt-3 text-sm opacity-70">krishimitra@example.com<br>+91 98765 43210</div></div></div><div class="text-center mt-8 text-xs opacity-50">© 2025 KrishiMitra. Demo prototype for hackathon.</div></footer>
+`;}
+
+function findPage(){
+let machines=getMachines();
+let filtered = machines;
+
+// Location filter - agar us location ka machine nahi hai to 0 mat dikhao, nearest dikhao
+if(findFilters.location && findFilters.location !== 'All Maharashtra' && findFilters.location !== 'All India' && findFilters.location.trim() !== ''){
+  let temp = machines.filter(m=>m.location.toLowerCase().includes(findFilters.location.toLowerCase()));
+  if(temp.length > 0){
+    filtered = temp;
+  }
+  // agar temp empty hai to filtered = all machines hi rehne do
+}
+if(findFilters.type && findFilters.type.trim() !== ''){
+  // Rotavators -> Rotavator banake search karo
+  let searchType = findFilters.type.replace('Tractors','Tractor').replace('Rotavators','Rotavator').replace('Harvesters','Harvester');
+  let temp2 = filtered.filter(m=>m.type.toLowerCase().includes(searchType.toLowerCase()) || m.name.toLowerCase().includes(searchType.toLowerCase()));
+  if(temp2.length > 0) filtered = temp2;
+}
+ let html = `<div class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-[320px_1fr] gap-6">
+ <div class="bg-white rounded-2xl border p-5 h-fit">
+ <h3 class="font-bold">Find Machinery</h3>
+ <div class="mt-4 space-y-3">
+ <input id="f-location" value="${findFilters.location||''}" placeholder="Location" class="w-full border p-2.5 rounded-xl text-sm">
+ <input id="f-area" value="${findFilters.area||''}" placeholder="Farm area (acres)" class="w-full border p-2.5 rounded-xl text-sm">
+ <input id="f-work" value="${findFilters.work||''}" placeholder="Type of work (ploughing...)" class="w-full border p-2.5 rounded-xl text-sm">
+ <select id="f-type" class="w-full border p-2.5 rounded-xl text-sm"><option value="">Any Machine</option><option ${findFilters.type=='Tractor'?'selected':''}>Tractor</option><option ${findFilters.type=='Harvester'?'selected':''}>Harvester</option><option ${findFilters.type=='Rotavator'?'selected':''}>Rotavator</option><option ${findFilters.type=='Cultivator'?'selected':''}>Cultivator</option><option ${findFilters.type=='Seed Drill'?'selected':''}>Seed Drill</option></select>
+ <input id="f-date" value="${findFilters.date||''}" type="date" class="w-full border p-2.5 rounded-xl text-sm">
+ <input id="f-duration" value="${findFilters.duration||''}" placeholder="Duration (hours)" class="w-full border p-2.5 rounded-xl text-sm">
+ <input id="f-budget" value="${findFilters.budget||''}" placeholder="Budget (₹/day)" class="w-full border p-2.5 rounded-xl text-sm">
+ <button onclick="applyFind()" class="w-full bg-primary text-white py-3 rounded-xl font-semibold">Find Best Match</button>
+ </div>
+ <div class="mt-6"><div class="font-semibold text-sm">Filters</div>
+ <div class="mt-2 flex flex-wrap gap-2"><button onclick="sortBy('match')" class="px-3 py-1 bg-gray-100 rounded-full text-xs">Best Match</button><button onclick="sortBy('nearest')" class="px-3 py-1 bg-gray-100 rounded-full text-xs">Nearest</button><button onclick="sortBy('price')" class="px-3 py-1 bg-gray-100 rounded-full text-xs">Lowest Price</button></div>
+ </div>
+ </div>
+ <div><div class="flex justify-between items-center"><div class="font-bold">${filtered.length} machines found</div><select id="sortSelect" onchange="sortBy(this.value)" class="border p-2 rounded-xl text-sm"><option value="match">Best Match</option><option value="nearest">Nearest</option><option value="price">Lowest Price</option><option value="rating">Highest Rated</option></select></div>
+ <div id="machineGrid" class="mt-4 grid md:grid-cols-2 gap-4">
+ ${filtered.map(m=>{
+  let score=aiScore(m,findFilters);
+  return `<div class="bg-white rounded-2xl border overflow-hidden hover:shadow-lg transition">
+   <div class="relative"><img src="${m.image}" class="h-44 w-full object-cover"><div class="absolute top-3 left-3 bg-white px-2 py-1 rounded-full text-xs font-bold">🏆 ${score.total}% Best Match</div><button onclick="toggleFav('${m.id}')" class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full"><i class="fa-${getFavs().includes(m.id)?'solid':'regular'} fa-heart ${getFavs().includes(m.id)?'text-red-500':''}"></i></button><div class="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs">${m.availability?'Available':'Busy'}</div></div>
+   <div class="p-4"><div class="flex justify-between"><div class="font-bold text-sm">${m.name}</div><div class="text-xs">⭐ ${m.rating}</div></div><div class="text-xs text-gray-500 mt-1">${m.owner} • ${m.location} • ${m.distance}km</div>
+   <div class="mt-2 flex gap-2 text-xs"><span class="px-2 py-1 bg-green-50 rounded-full">₹${m.priceHour}/hr</span><span class="px-2 py-1 bg-yellow-50 rounded-full">₹${m.priceDay}/day</span></div>
+   <div class="mt-2 text-[11px] text-gray-500">Location ${score.locScore}% • Work ${score.workScore}% • Price ${score.priceScore}%</div>
+   <div class="mt-3 flex gap-2"><button onclick="navigate('detail-${m.id}')" class="flex-1 border py-2 rounded-xl text-sm">View Details</button><button onclick="bookMachine('${m.id}')" class="flex-1 bg-primary text-white py-2 rounded-xl text-sm font-semibold">Book Now</button></div>
+   </div></div>`;
+ }).join('')}
+ </div></div></div>`;
+ return html;
+}
+
+function rentPage(){return `
+<div class="max-w-3xl mx-auto px-4 py-10"><div class="bg-white rounded-2xl border p-8"><h1 class="poppins text-2xl font-bold">Rent Out Your Machinery</h1><p class="text-sm text-gray-500 mt-1">List your machine and start earning. It will appear instantly in Find Machinery.</p>
+<div class="mt-6 grid md:grid-cols-2 gap-4">
+<input id="o-name" placeholder="Owner name" class="border p-3 rounded-xl">
+<input id="o-phone" placeholder="Phone number" class="border p-3 rounded-xl">
+<select id="o-type" class="border p-3 rounded-xl"><option>Tractor</option><option>Harvester</option><option>Rotavator</option><option>Cultivator</option><option>Seed Drill</option><option>Other</option></select>
+<input id="o-model" placeholder="Machine name/model" class="border p-3 rounded-xl">
+<input id="o-ph" placeholder="Price / hour (₹)" type="number" class="border p-3 rounded-xl">
+<input id="o-pd" placeholder="Price / day (₹)" type="number" class="border p-3 rounded-xl">
+<input id="o-loc" placeholder="Location (e.g. Nagpur)" class="border p-3 rounded-xl">
+<input id="o-dates" placeholder="Available dates (e.g. 10-20 Sept)" class="border p-3 rounded-xl">
+<input id="o-img" placeholder="Image URL (or leave blank for default)" class="md:col-span-2 border p-3 rounded-xl">
+<textarea id="o-desc" placeholder="Description" class="md:col-span-2 border p-3 rounded-xl h-24"></textarea>
+</div>
+<button onclick="listMachine()" class="mt-6 w-full bg-primary text-white py-3 rounded-xl font-bold">List My Machine</button>
+<div id="listMsg" class="hidden mt-4 p-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700"></div>
+</div></div>`;}
+
+function howPage(){return `<div class="max-w-5xl mx-auto px-4 py-12"><h1 class="poppins text-3xl font-bold text-center">How It Works</h1>
+<div class="mt-10 grid md:grid-cols-4 gap-6"><div class="bg-white p-6 rounded-2xl border text-center"><div class="w-12 h-12 bg-green-100 rounded-full mx-auto flex items-center justify-center font-bold text-primary">1</div><div class="mt-3 font-bold">Search</div><p class="text-sm text-gray-500 mt-1">Tell us what machinery you need.</p></div><div class="bg-white p-6 rounded-2xl border text-center"><div class="w-12 h-12 bg-green-100 rounded-full mx-auto flex items-center justify-center font-bold text-primary">2</div><div class="mt-3 font-bold">Get Matched</div><p class="text-sm text-gray-500 mt-1">Our AI recommends nearby suitable machinery.</p></div><div class="bg-white p-6 rounded-2xl border text-center"><div class="w-12 h-12 bg-green-100 rounded-full mx-auto flex items-center justify-center font-bold text-primary">3</div><div class="mt-3 font-bold">Book</div><p class="text-sm text-gray-500 mt-1">Choose and send booking request.</p></div><div class="bg-white p-6 rounded-2xl border text-center"><div class="w-12 h-12 bg-green-100 rounded-full mx-auto flex items-center justify-center font-bold text-primary">4</div><div class="mt-3 font-bold">Farm</div><p class="text-sm text-gray-500 mt-1">Use machinery and complete work.</p></div></div>
+<div class="mt-12 bg-[#E8F5E9] rounded-2xl p-8"><h3 class="font-bold">For Owners: List → Receive Requests → Accept → Earn</h3></div></div>`;}
+function aboutPage(){return `<div class="max-w-5xl mx-auto px-4 py-12"><h1 class="poppins text-3xl font-bold">About KrishiMitra</h1><p class="mt-4 text-gray-600">KrishiMitra is a digital platform designed to make agricultural machinery more accessible to farmers while helping machinery owners earn additional income by renting out unused equipment.</p><div class="mt-8 grid md:grid-cols-2 gap-6"><div class="bg-white p-6 rounded-2xl border"><h3 class="font-bold">Our Mission</h3><p class="text-sm text-gray-500 mt-2">Empower every farmer with affordable mechanization.</p></div><div class="bg-white p-6 rounded-2xl border"><h3 class="font-bold">Our Vision</h3><p class="text-sm text-gray-500 mt-2">A connected rural economy where no machine sits idle.</p></div></div><div class="mt-8 bg-white rounded-2xl border p-6"><h3 class="font-bold">Why We Built KrishiMitra</h3><ul class="mt-3 text-sm text-gray-600 list-disc ml-5"><li>70% farmers can't afford to own tractors</li><li>Owners' machines sit idle 60% of time</li><li>No transparent price discovery</li></ul></div></div>`;}
+function reviewsPage(){return `<div class="max-w-5xl mx-auto px-4 py-12"><div class="text-center"><h1 class="poppins text-3xl font-bold">Customer Reviews</h1><div class="mt-2 text-2xl">⭐ 4.8/5 Average Rating</div></div><div class="mt-8 grid md:grid-cols-3 gap-6">${[{n:'Rahul Patil',t:'I found a tractor near my farm within minutes. The matching feature made it very easy.'},{n:'Sunita Deshmukh',t:'Listing my rotavator was so simple. I earned ₹15000 last month!'},{n:'Amit Yadav',t:'Booking process is smooth and owners are verified. Highly recommended.'},{n:'Priya Sharma',t:'Saved 40% compared to local dealer rates. Great platform!'},{n:'Vikram More',t:'AI match actually works - got best machine for my 5 acre farm.'}].map(r=>`<div class="bg-white p-6 rounded-2xl border"><div class="text-yellow-400">⭐⭐⭐⭐⭐</div><p class="mt-3 text-sm">"${r.t}"</p><div class="mt-3 font-bold text-sm">— ${r.n}</div><div class="text-xs text-gray-400">Demo testimonial</div></div>`).join('')}</div></div>`;}
+function contactPage(){return `<div class="max-w-4xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-8"><div class="bg-white p-8 rounded-2xl border"><h1 class="poppins text-2xl font-bold">Contact Us</h1><div class="mt-6 space-y-3"><input id="c-name" placeholder="Name" class="w-full border p-3 rounded-xl"><input id="c-email" placeholder="Email" class="w-full border p-3 rounded-xl"><input id="c-phone" placeholder="Phone" class="w-full border p-3 rounded-xl"><textarea id="c-msg" placeholder="Message" class="w-full border p-3 rounded-xl h-28"></textarea><button onclick="sendContact()" class="w-full bg-primary text-white py-3 rounded-xl font-bold">Send Message</button><div id="c-resp" class="hidden p-3 bg-green-50 rounded-xl text-sm"></div></div></div><div class="space-y-6"><div class="bg-white p-6 rounded-2xl border"><div class="font-bold">Reach Us</div><div class="mt-2 text-sm text-gray-600">krishimitra@example.com<br>+91 98765 43210<br>Nagpur, Maharashtra</div></div></div></div>`;}
+function loginPage(){return `<div class="max-w-md mx-auto px-4 py-16"><div class="bg-white rounded-2xl border p-8"><h1 class="poppins text-2xl font-bold text-center">Welcome to KrishiMitra</h1><div class="mt-6 grid grid-cols-2 gap-3"><button onclick="setRole('farmer')" id="role-farmer" class="border-2 border-primary bg-green-50 p-4 rounded-xl text-sm font-bold">👨‍🌾 Farmer</button><button onclick="setRole('owner')" id="role-owner" class="border p-4 rounded-xl text-sm font-bold">🚜 Owner</button></div><div class="mt-6 space-y-3"><input id="l-name" placeholder="Full Name" class="w-full border p-3 rounded-xl"><input id="l-phone" placeholder="Phone / Email" class="w-full border p-3 rounded-xl"><input id="l-pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl"><input id="l-loc" placeholder="Location" class="w-full border p-3 rounded-xl"></div><button onclick="doLogin()" class="mt-6 w-full bg-primary text-white py-3 rounded-xl font-bold">Continue</button><div class="mt-4 text-xs text-gray-400 text-center">Frontend demo auth using localStorage</div></div></div>`;}
+function detailPage(id){
+ let m=getMachines().find(x=>x.id===id); if(!m) return '<div>Not found</div>';
+ let score=aiScore(m,findFilters);
+ return `<div class="max-w-6xl mx-auto px-4 py-8 grid lg:grid-cols-2 gap-8"><img src="${m.image}" class="rounded-2xl w-full h-[400px] object-cover"><div><div class="inline-block px-3 py-1 bg-green-100 rounded-full text-xs font-bold">🏆 ${score.total}% Best Match</div><h1 class="poppins text-3xl font-bold mt-3">${m.name}</h1><div class="mt-2 text-sm text-gray-500">${m.type} • ${m.owner} • ${m.location}</div>
+ <div class="mt-4 bg-[#F8F9F3] p-4 rounded-xl"><div class="text-xs font-bold">Why Recommended?</div><p class="text-xs mt-1 text-gray-600">Recommended because this machine is suitable for your work, within your budget and available near your location.</p><div class="mt-2 grid grid-cols-4 gap-2 text-[11px]"><div>Location ${score.locScore}%</div><div>Work ${score.workScore}%</div><div>Price ${score.priceScore}%</div><div>Avail ${score.availScore}%</div></div></div>
+ <div class="mt-4 flex gap-3"><div class="bg-white border p-3 rounded-xl"><div class="text-xs text-gray-500">Per Hour</div><div class="font-bold">₹${m.priceHour}</div></div><div class="bg-white border p-3 rounded-xl"><div class="text-xs text-gray-500">Per Day</div><div class="font-bold">₹${m.priceDay}</div></div><div class="bg-white border p-3 rounded-xl"><div class="text-xs text-gray-500">Rating</div><div class="font-bold">⭐ ${m.rating}</div></div></div>
+ <div class="mt-6 bg-white border rounded-xl p-4"><div class="font-bold text-sm">Book This Machine</div><div class="mt-3 grid grid-cols-2 gap-3"><input id="b-date" type="date" class="border p-2 rounded-xl text-sm"><input id="b-duration" placeholder="Duration (hrs)" class="border p-2 rounded-xl text-sm"><input id="b-time" type="time" class="border p-2 rounded-xl text-sm col-span-2"></div><div class="mt-3 text-sm">Estimated: ₹<span id="estCost">${m.priceHour*5}</span> for <span id="estDur">5</span> hrs</div><button onclick="confirmBook('${m.id}')" class="mt-3 w-full bg-primary text-white py-3 rounded-xl font-bold">Send Booking Request</button></div>
+ </div></div>`;
+}
+function ownerDashPage(){
+ let machines=getMachines(); let bookings=getBookings();
+ let myMachines = machines.filter(m=>{let u=getUser(); return u && m.owner===u.name}); if(myMachines.length===0) myMachines=machines.slice(0,2);
+ let pending = bookings.filter(b=>b.status==='Pending');
+ return `<div class="max-w-7xl mx-auto px-4 py-8"><h1 class="poppins text-2xl font-bold">Owner Dashboard</h1>
+ <div class="mt-6 grid md:grid-cols-4 gap-4"><div class="bg-white p-5 rounded-2xl border"><div class="text-xs text-gray-500">Total Machines</div><div class="text-2xl font-bold">${myMachines.length}</div></div><div class="bg-white p-5 rounded-2xl border"><div class="text-xs text-gray-500">Pending Requests</div><div class="text-2xl font-bold">${pending.length}</div></div><div class="bg-white p-5 rounded-2xl border"><div class="text-xs text-gray-500">Active Listings</div><div class="text-2xl font-bold">${myMachines.filter(m=>m.availability).length}</div></div><div class="bg-white p-5 rounded-2xl border"><div class="text-xs text-gray-500">Est. Earnings</div><div class="text-2xl font-bold">₹${bookings.filter(b=>b.status==='Confirmed').reduce((s,b)=>s+b.amount,0)||4500}</div></div></div>
+ <div class="mt-8 grid lg:grid-cols-2 gap-6"><div class="bg-white rounded-2xl border p-5"><h3 class="font-bold">My Machines</h3><div class="mt-4 space-y-3">${myMachines.map(m=>`<div class="flex gap-3 border p-3 rounded-xl"><img src="${m.image}" class="w-16 h-16 rounded-lg object-cover"><div class="flex-1"><div class="font-bold text-sm">${m.name}</div><div class="text-xs text-gray-500">₹${m.priceHour}/hr • ${m.location}</div><div class="mt-1 flex gap-2"><button onclick="toggleAvail('${m.id}')" class="text-xs px-2 py-1 bg-gray-100 rounded-full">${m.availability?'Active':'Inactive'}</button><button onclick="deleteMachine('${m.id}')" class="text-xs px-2 py-1 bg-red-50 text-red-600 rounded-full">Delete</button></div></div></div>`).join('')}</div></div>
+ <div class="bg-white rounded-2xl border p-5"><h3 class="font-bold">Booking Requests</h3><div class="mt-4 space-y-3">${bookings.length?bookings.map(b=>`<div class="border p-4 rounded-xl"><div class="font-bold text-sm">${b.machineName}</div><div class="text-xs text-gray-500">Farmer: ${b.farmerName} • ${b.date} • ${b.duration} hrs • ₹${b.amount}</div><div class="mt-2 flex gap-2">${b.status==='Pending'?`<button onclick="updateBooking('${b.id}','Confirmed')" class="px-3 py-1 bg-primary text-white rounded-full text-xs">Accept</button><button onclick="updateBooking('${b.id}','Rejected')" class="px-3 py-1 bg-gray-100 rounded-full text-xs">Reject</button>`:`<span class="px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs">${b.status}</span>`}</div></div>`).join(''):'<div class="text-sm text-gray-400">No requests yet</div>'}</div></div></div></div>`;
+}
+function farmerDashPage(){
+ let bookings=getBookings(); let favs=getFavs(); let machines=getMachines().filter(m=>favs.includes(m.id));
+ return `<div class="max-w-7xl mx-auto px-4 py-8"><h1 class="poppins text-2xl font-bold">Farmer Dashboard</h1>
+ <div class="mt-6 grid lg:grid-cols-3 gap-6"><div class="lg:col-span-2 bg-white rounded-2xl border p-5"><h3 class="font-bold">My Bookings</h3><div class="mt-4 flex gap-2 text-xs"><span class="px-2 py-1 bg-yellow-100 rounded-full">Pending</span><span class="px-2 py-1 bg-green-100 rounded-full">Confirmed</span><span class="px-2 py-1 bg-gray-100 rounded-full">Completed</span></div><div class="mt-4 space-y-3">${bookings.length?bookings.map(b=>`<div class="border p-4 rounded-xl flex justify-between"><div><div class="font-bold text-sm">${b.machineName}</div><div class="text-xs text-gray-500">${b.owner} • ${b.date} • ${b.duration}h • ₹${b.amount}</div></div><div class="text-xs px-2 py-1 bg-gray-100 rounded-full h-fit">${b.status}</div></div>`).join(''):'<div class="text-sm text-gray-400">No bookings yet. Find a machine!</div>'}</div></div>
+ <div class="space-y-6"><div class="bg-white rounded-2xl border p-5"><h3 class="font-bold">Saved Machinery</h3><div class="mt-3 space-y-2">${machines.length?machines.map(m=>`<div class="text-sm">${m.name} - ₹${m.priceHour}/hr</div>`).join(''):'<div class="text-xs text-gray-400">No saved machines</div>'}</div></div><div class="bg-white rounded-2xl border p-5"><h3 class="font-bold">Profile</h3><div class="mt-2 text-sm">${(()=>
+ {let u=getUser(); if(!u) return 'Guest'; return `${u.name}<br>${u.phone||''}<br>${u.location||''}`})()}</div><button onclick="logout()" class="mt-3 w-full border py-2 rounded-xl text-sm">Logout</button></div></div></div></div>`;
+}
+
+// ---------- ACTIONS ----------
+let selectedRole='farmer';
+function setRole(r){selectedRole=r; document.getElementById('role-farmer').className=r==='farmer'?'border-2 border-primary bg-green-50 p-4 rounded-xl text-sm font-bold':'border p-4 rounded-xl text-sm font-bold'; document.getElementById('role-owner').className=r==='owner'?'border-2 border-primary bg-green-50 p-4 rounded-xl text-sm font-bold':'border p-4 rounded-xl text-sm font-bold';}
+function doLogin(){
+ let name=document.getElementById('l-name').value||'Demo User'; let phone=document.getElementById('l-phone').value||'9876543210'; let loc=document.getElementById('l-loc').value||'Nagpur';
+ localStorage.setItem('km_user',JSON.stringify({name,phone,location:loc,role:selectedRole}));
+ alert('Logged in as '+selectedRole); navigate(selectedRole==='owner'?'ownerDash':'farmerDash');
+}
+function logout(){localStorage.removeItem('km_user'); navigate('home');}
+function homeSearch(){findFilters={location:document.getElementById('h-location').value, type:document.getElementById('h-machine').value, date:document.getElementById('h-date').value}; navigate('find');}
+function catSearch(cat){findFilters={type:cat.replace('Tractors','Tractor')}; navigate('find');}
+function applyFind(){findFilters={location:document.getElementById('f-location').value, area:document.getElementById('f-area').value, work:document.getElementById('f-work').value, type:document.getElementById('f-type').value, date:document.getElementById('f-date').value, duration:document.getElementById('f-duration').value, budget:document.getElementById('f-budget').value}; render();}
+function sortBy(type){
+ let grid=document.getElementById('machineGrid'); if(!grid) return;
+ let machines=[...getMachines()];
+ if(findFilters.location) machines=machines.filter(m=>m.location.toLowerCase().includes(findFilters.location.toLowerCase()));
+ if(findFilters.type) machines=machines.filter(m=>m.type.toLowerCase().includes(findFilters.type.toLowerCase()));
+ if(type==='nearest') machines.sort((a,b)=>a.distance-b.distance);
+ if(type==='price') machines.sort((a,b)=>a.priceDay-b.priceDay);
+ if(type==='rating') machines.sort((a,b)=>b.rating-a.rating);
+ if(type==='match') machines.sort((a,b)=>aiScore(b,findFilters).total - aiScore(a,findFilters).total);
+ // re-render filtered grid quickly
+ let filteredHTML = machines.map(m=>{let score=aiScore(m,findFilters); return `<div class="bg-white rounded-2xl border overflow-hidden"><div class="relative"><img src="${m.image}" class="h-44 w-full object-cover"><div class="absolute top-3 left-3 bg-white px-2 py-1 rounded-full text-xs font-bold">🏆 ${score.total}%</div></div><div class="p-4"><div class="font-bold text-sm">${m.name}</div><div class="text-xs text-gray-500">${m.location} • ${m.distance}km • ₹${m.priceHour}/hr</div><div class="mt-3 flex gap-2"><button onclick="navigate('detail-${m.id}')" class="flex-1 border py-2 rounded-xl text-sm">View</button><button onclick="bookMachine('${m.id}')" class="flex-1 bg-primary text-white py-2 rounded-xl text-sm">Book</button></div></div></div>`}).join('');
+ grid.innerHTML=filteredHTML;
+}
+function listMachine(){
+ let name=document.getElementById('o-name').value||'Demo Owner'; let phone=document.getElementById('o-phone').value||'9876543210'; let type=document.getElementById('o-type').value; let model=document.getElementById('o-model').value||'New Tractor'; let ph=parseInt(document.getElementById('o-ph').value)||800; let pd=parseInt(document.getElementById('o-pd').value)||6000; let loc=document.getElementById('o-loc').value||'Nagpur'; let img=document.getElementById('o-img').value||'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600'; let desc=document.getElementById('o-desc').value||'Well maintained machine';
+ let machines=getMachines(); machines.unshift({id:'m'+Date.now(),name:model,type,owner:name,phone,location:loc,distance:Math.round(Math.random()*10*10)/10,priceHour:ph,priceDay:pd,rating:4.5,availability:true,image:img,desc,work:['ploughing']}); saveMachines(machines);
+ document.getElementById('listMsg').classList.remove('hidden'); document.getElementById('listMsg').innerText='Your machine has been successfully listed on KrishiMitra. It is now visible in Find Machinery.';
+ setTimeout(()=>navigate('find'),1200);
+}
+function bookMachine(id){navigate('detail-'+id);}
+function confirmBook(id){
+ let m=getMachines().find(x=>x.id===id); let date=document.getElementById('b-date').value||new Date().toISOString().slice(0,10); let dur=parseInt(document.getElementById('b-duration').value)||5; let time=document.getElementById('b-time').value||'09:00';
+ let user=getUser(); if(!user){alert('Please login first as Farmer'); navigate('login'); return;}
+ let bookings=getBookings(); bookings.unshift({id:'b'+Date.now(),machineId:id,machineName:m.name,owner:m.owner,farmerName:user.name,date,duration:dur,time,amount:m.priceHour*dur,status:'Pending'});
+ saveBookings(bookings); alert('Booking request sent successfully to the machinery owner.'); navigate('farmerDash');
+}
+function updateBooking(id,status){let b=getBookings(); let idx=b.findIndex(x=>x.id===id); if(idx>=0){b[idx].status=status; saveBookings(b); render();}}
+function deleteMachine(id){let m=getMachines().filter(x=>x.id!==id); saveMachines(m); render();}
+function toggleAvail(id){let ms=getMachines(); let f=ms.find(x=>x.id===id); if(f){f.availability=!f.availability; saveMachines(ms); render();}}
+function toggleFav(id){let favs=getFavs(); if(favs.includes(id)) favs=favs.filter(x=>x!==id); else favs.push(id); localStorage.setItem('km_fav',JSON.stringify(favs)); render();}
+function sendContact(){document.getElementById('c-resp').classList.remove('hidden'); document.getElementById('c-resp').innerText='Thank you! Your message has been received.';}
+function attachEvents(){
+function showLoc(type){
+  let drop = document.getElementById(type+'-locDrop');
+  if(!drop) return;
+  drop.classList.remove('hidden');
+  filterLoc(document.getElementById(type=='h'?'h-location':'f-location').value, type);
+}
+function filterLoc(val,type){
+  let drop = document.getElementById(type+'-locDrop');
+  if(!drop) return;
+  let q = (val||'').toLowerCase();
+  let filtered = allLocations.filter(l=>l.toLowerCase().includes(q));
+  drop.innerHTML = filtered.map(l=>`<div onclick="selectLoc(this.dataset.loc,'${type}')" data-loc="${l}" class="px-4 py-2 hover:bg-green-50 cursor-pointer border-b text-sm">${l}</div>`).join('');
+}
+function selectLoc(loc,type){
+  document.getElementById(type=='h'?'h-location':'f-location').value = loc;
+  document.getElementById(type+'-locDrop').classList.add('hidden');
+  if(type=='f') findFilters.location = loc;
+}
+ let estDur=document.getElementById('b-duration'); if(estDur){estDur.addEventListener('input',e=>{let d=parseInt(e.target.value)||5; document.getElementById('estDur').innerText=d; let mid=currentPage.split('-')[1]; let mach=getMachines().find(x=>x.id===mid); if(mach) document.getElementById('estCost').innerText=mach.priceHour*d;});}
+}
+document.addEventListener('click',e=>{ if(!e.target.closest('.relative')){ document.querySelectorAll('[id$="-locDrop"]').forEach(d=>d.classList.add('hidden')); }});
+render();
+</script>
+</body>
+</html>
+ 
