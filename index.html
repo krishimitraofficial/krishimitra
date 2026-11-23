@@ -17,6 +17,11 @@
 <div class="hidden lg:flex gap-6 text-sm font-medium"><a onclick="navigate('home')" class="navlink cursor-pointer">Home</a><a onclick="navigate('find')" class="navlink cursor-pointer">Find Machinery</a><a onclick="navigate('rent')" class="navlink cursor-pointer">Rent Out Machinery</a><a onclick="navigate('how')" class="navlink cursor-pointer">How It Works</a><a onclick="navigate('about')" class="navlink cursor-pointer">About Us</a><a onclick="navigate('reviews')" class="navlink cursor-pointer">Reviews</a><a onclick="navigate('contact')" class="navlink cursor-pointer">Contact</a></div>
 <div class="flex items-center gap-3"><button id="dashBtn" onclick="openDashboard()" class="hidden px-4 py-2 bg-gray-100 rounded-full text-sm"><i class="fa-regular fa-user mr-1"></i> Dashboard</button><button onclick="navigate('login')" id="loginBtn" class="px-4 py-2 text-sm font-medium">Login</button><button onclick="navigate('find')" class="hidden md:block px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold">Get Started</button><button class="lg:hidden" onclick="toggleMobile()"><i class="fa-solid fa-bars text-xl"></i></button></div>
 </div>
+<div class="flex gap-1 bg-gray-100 p-1 rounded-full text-xs font-bold">
+<button onclick="setLang('en')" class="px-2 py-1 rounded-full bg-white">EN</button>
+<button onclick="setLang('mr')" class="px-2 py-1 rounded-full">मराठी</button>
+<button onclick="setLang('hi')" class="px-2 py-1 rounded-full">हिंदी</button>
+</div> 
 <div id="mobileMenu" class="hidden lg:hidden border-t bg-white p-4 space-y-3"><a onclick="navigate('home');toggleMobile()" class="block">Home</a><a onclick="navigate('find');toggleMobile()" class="block">Find Machinery</a><a onclick="navigate('rent');toggleMobile()" class="block">Rent Out Machinery</a><a onclick="navigate('how');toggleMobile()" class="block">How It Works</a><a onclick="navigate('about');toggleMobile()" class="block">About Us</a><a onclick="navigate('reviews');toggleMobile()" class="block">Reviews</a><a onclick="navigate('contact');toggleMobile()" class="block">Contact</a></div>
 </nav>
 
@@ -286,5 +291,6 @@ render();
 </body>
 </html>
  
+
 
 
