@@ -333,105 +333,12 @@ function setLang(lang){
   if(links[4]) links[4].innerText = d.about;
   if(links[5]) links[5].innerText = d.review;
   if(links[6]) links[6].innerText = d.contact;
- function setLang(lang){
-  let t = {
-    en: {
-      h1: 'Find the Right Farm Machinery, <span class="text-primary">Right When You Need It.</span>',
-      sub: 'KrishiMitra connects farmers with nearby agricultural machinery owners for easy, affordable and reliable rentals.',
-      need: 'I Need a Machine',
-      rent: 'Rent Out My Machine',
-      find: 'Find Machinery',
-      home: 'Home', findNav: 'Find Machinery', rentNav: 'Rent Out Machinery', how: 'How It Works', about: 'About Us', review: 'Reviews', contact: 'Contact', login: 'Login'
-    },
-    mr: {
-      h1: 'योग्य शेती यंत्र शोधा, <span class="text-primary">जेव्हा हवे तेव्हा.</span>',
-      sub: 'कृषीमित्र शेतकऱ्यांना जवळच्या शेती यंत्र मालकांशी जोडते - सोपे, स्वस्त आणि विश्वासू भाडे.',
-      need: 'मला यंत्र हवे आहे',
-      rent: 'माझे यंत्र भाड्याने द्या',
-      find: 'यंत्र शोधा',
-      home: 'होम', findNav: 'यंत्र शोधा', rentNav: 'यंत्र भाड्याने द्या', how: 'कसे काम करते', about: 'आमच्याबद्दल', review: 'अभिप्राय', contact: 'संपर्क', login: 'लॉगिन'
-    },
-    hi: {
-      h1: 'सही खेती की मशीन खोजें, <span class="text-primary">जब चाहिए तब.</span>',
-      sub: 'कृषिमित्र किसानों को पास के कृषि यंत्र मालिकों से जोड़ता है - आसान, सस्ता और भरोसेमंद किराया.',
-      need: 'मुझे मशीन चाहिए',
-      rent: 'मेरी मशीन किराये पर दें',
-      find: 'मशीन खोजें',
-      home: 'होम', findNav: 'मशीन खोजें', rentNav: 'मशीन किराये पर दें', how: 'कैसे काम करता है', about: 'हमारे बारे में', review: 'समीक्षा', contact: 'संपर्क', login: 'लॉगिन'
-    }
-  };
-  let d = t[lang];
-  document.querySelector('h1').innerHTML = d.h1;
-  let allP = document.querySelectorAll('p');
-  if(allP[0]) allP[0].innerText = d.sub;
-  let btns = document.querySelectorAll('button');
-  btns.forEach(b=>{
-    if(b.innerText.includes('I Need') || b.innerText.includes('मला') || b.innerText.includes('मुझे')) b.innerText = d.need;
-    if(b.innerText.includes('Rent Out My') || b.innerText.includes('माझे यंत्र') || b.innerText.includes('मेरी मशीन')) b.innerText = d.rent;
-    if(b.innerText.includes('Find Machinery') || b.innerText.includes('यंत्र शोधा') || b.innerText.includes('मशीन खोजें')) b.innerText = d.find;
-    if(b.innerText.includes('Login') || b.innerText.includes('लॉगिन')) b.innerText = d.login;
-  });
-  let links = document.querySelectorAll('nav a');
-  if(links[0]) links[0].innerText = d.home;
-  if(links[1]) links[1].innerText = d.findNav;
-  if(links[2]) links[2].innerText = d.rentNav;
-  if(links[3]) links[3].innerText = d.how;
-  if(links[4]) links[4].innerText = d.about;
-  if(links[5]) links[5].innerText = d.review;
-  if(links[6]) links[6].innerText = d.contact;
-  function setLang(lang){
-  let t = {
-    en: {
-      h1: 'Find the Right Farm Machinery, <span class="text-primary">Right When You Need It.</span>',
-      sub: 'KrishiMitra connects farmers with nearby agricultural machinery owners for easy, affordable and reliable rentals.',
-      need: 'I Need a Machine',
-      rent: 'Rent Out My Machine',
-      find: 'Find Machinery',
-      home: 'Home', findNav: 'Find Machinery', rentNav: 'Rent Out Machinery', how: 'How It Works', about: 'About Us', review: 'Reviews', contact: 'Contact', login: 'Login'
-    },
-    mr: {
-      h1: 'योग्य शेती यंत्र शोधा, <span class="text-primary">जेव्हा हवे तेव्हा.</span>',
-      sub: 'कृषीमित्र शेतकऱ्यांना जवळच्या शेती यंत्र मालकांशी जोडते - सोपे, स्वस्त आणि विश्वासू भाडे.',
-      need: 'मला यंत्र हवे आहे',
-      rent: 'माझे यंत्र भाड्याने द्या',
-      find: 'यंत्र शोधा',
-      home: 'होम', findNav: 'यंत्र शोधा', rentNav: 'यंत्र भाड्याने द्या', how: 'कसे काम करते', about: 'आमच्याबद्दल', review: 'अभिप्राय', contact: 'संपर्क', login: 'लॉगिन'
-    },
-    hi: {
-      h1: 'सही खेती की मशीन खोजें, <span class="text-primary">जब चाहिए तब.</span>',
-      sub: 'कृषिमित्र किसानों को पास के कृषि यंत्र मालिकों से जोड़ता है - आसान, सस्ता और भरोसेमंद किराया.',
-      need: 'मुझे मशीन चाहिए',
-      rent: 'मेरी मशीन किराये पर दें',
-      find: 'मशीन खोजें',
-      home: 'होम', findNav: 'मशीन खोजें', rentNav: 'मशीन किराये पर दें', how: 'कैसे काम करता है', about: 'हमारे बारे में', review: 'समीक्षा', contact: 'संपर्क', login: 'लॉगिन'
-    }
-  };
-  let d = t[lang];
-  document.querySelector('h1').innerHTML = d.h1;
-  let allP = document.querySelectorAll('p');
-  if(allP[0]) allP[0].innerText = d.sub;
-  let btns = document.querySelectorAll('button');
-  btns.forEach(b=>{
-    if(b.innerText.includes('I Need') || b.innerText.includes('मला') || b.innerText.includes('मुझे')) b.innerText = d.need;
-    if(b.innerText.includes('Rent Out My') || b.innerText.includes('माझे यंत्र') || b.innerText.includes('मेरी मशीन')) b.innerText = d.rent;
-    if(b.innerText.includes('Find Machinery') || b.innerText.includes('यंत्र शोधा') || b.innerText.includes('मशीन खोजें')) b.innerText = d.find;
-    if(b.innerText.includes('Login') || b.innerText.includes('लॉगिन')) b.innerText = d.login;
-  });
-  let links = document.querySelectorAll('nav a');
-  if(links[0]) links[0].innerText = d.home;
-  if(links[1]) links[1].innerText = d.findNav;
-  if(links[2]) links[2].innerText = d.rentNav;
-  if(links[3]) links[3].innerText = d.how;
-  if(links[4]) links[4].innerText = d.about;
-  if(links[5]) links[5].innerText = d.review;
-  if(links[6]) links[6].innerText = d.contact;
-}
-}
 } 
 </script>
 </body>
 </html>
  
+
 
 
 
