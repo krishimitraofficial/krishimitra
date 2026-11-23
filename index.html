@@ -287,10 +287,17 @@ function selectLoc(loc,type){
 }
 document.addEventListener('click',e=>{ if(!e.target.closest('.relative')){ document.querySelectorAll('[id$="-locDrop"]').forEach(d=>d.classList.add('hidden')); }});
 render();
+ function setLang(lang){
+  let h = document.querySelector('h1');
+  if(lang=='mr'){ h.innerHTML = 'योग्य शेती यंत्र शोधा, <span class="text-primary">जेव्हा हवे तेव्हा.</span>'; }
+  if(lang=='hi'){ h.innerHTML = 'सही खेती की मशीन खोजें, <span class="text-primary">जब चाहिए तब.</span>'; }
+  if(lang=='en'){ h.innerHTML = 'Find the Right Farm Machinery, <span class="text-primary">Right When You Need It.</span>'; }
+}
 </script>
 </body>
 </html>
  
+
 
 
 
