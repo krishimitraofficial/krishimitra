@@ -101,7 +101,7 @@ function homePage(){return `
 
 <!-- Categories -->
 <div class="max-w-7xl mx-auto px-4 py-16"><h2 class="poppins text-2xl font-bold">Popular Machinery Categories</h2><div class="mt-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-${[{i:'🚜',n:'Tractors'},{i:'🌾',n:'Harvesters'},{i:'🌱',n:'Seed Drills'},{i:'🔄',n:'Rotavators'},{i:'🌾',n:'Cultivators'},{i:'💧',n:'Irrigation'},{i:'⚙️',n:'Others'}].map(c=>`<div onclick="catSearch('${c.n}')" class="bg-white p-5 rounded-2xl border hover:shadow-md cursor-pointer text-center"><div class="text-3xl">${c.i}</div><div class="mt-2 font-semibold text-sm">${c.n}</div></div>`).join('')}
+${[{i:'🚜',n:'Tractors'},{i:'🌾',n:'Harvesters'},{i:'🌱',n:'Seed Drills'},{i:'🔄',n:'Rotavator'},{i:'🌾',n:'Cultivator'},{i:'💧',n:'Irrigation'},{i:'⚙️',n:'Others'}].map(c=>`<div onclick="catSearch('${c.n}')" class="bg-white p-5 rounded-2xl border hover:shadow-md cursor-pointer text-center"><div class="text-3xl">${c.i}</div><div class="mt-2 font-semibold text-sm">${c.n}</div></div>`).join('')}
 </div></div>
 
 <!-- How works -->
@@ -127,7 +127,7 @@ if(findFilters.location && findFilters.location !== 'All Maharashtra' && findFil
   // agar temp empty hai to filtered = all machines hi rehne do
 }
 if(findFilters.type && findFilters.type.trim() !== ''){
-  // Rotavators -> Rotavator banake search karo
+  // Rotavator -> Rotavator banake search karo
   let searchType = findFilters.type.replace('Tractors','Tractor').replace('Rotavators','Rotavator').replace('Harvesters','Harvester');
   let temp2 = filtered.filter(m=>m.type.toLowerCase().includes(searchType.toLowerCase()) || m.name.toLowerCase().includes(searchType.toLowerCase()));
   if(temp2.length > 0) filtered = temp2;
@@ -286,3 +286,4 @@ render();
 </body>
 </html>
  
+
